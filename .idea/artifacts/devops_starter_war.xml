@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="devops-starter:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>devops-starter</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="testing-startcode-1.0.1.war">
+      <element id="artifact" artifact-name="devops-starter:war exploded" />
+    </root>
+  </artifact>
+</component>
