@@ -7,4 +7,6 @@ public interface CityInfoRepository {
 
     public CityInfosDTO getAllCityInfos() throws WebApplicationException;
 
+    public void runMigrationScript() throws WebApplicationException;
+
 }

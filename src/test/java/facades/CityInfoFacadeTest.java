@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import dtos.cityinfo.CityInfosDTO;
 import entities.cityinfo.CityInfoRepository;
-import entities.renameme.RenameMe;
-import entities.renameme.RenameMeRepository;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -66,5 +64,10 @@ class CityInfoFacadeTest {
     void getAllCityInfos() {
         CityInfosDTO cityInfosDTO = repo.getAllCityInfos();
         assertNotNull(cityInfosDTO);
+    }
+
+    @Test
+    void runMigrationScript() {
+        assertDoesNotThrow(() -> repo.runMigrationScript());
     }
 }
