@@ -34,7 +34,7 @@ public class CityInfoFacade implements CityInfoRepository {
         EntityManager em = emf.createEntityManager();
         List<CityInfo> cityInfo = em.createQuery("SELECT c FROM CityInfo c", CityInfo.class).getResultList();
         if (cityInfo == null) {
-            throw new WebApplicationException("No city info found: Consider running the migration script /cityinfo/runscript", 404);
+            throw new WebApplicationException("No city info found: Consider running the migration script /city/runscript", 404);
         }
         return new CityInfosDTO(cityInfo);
     }
