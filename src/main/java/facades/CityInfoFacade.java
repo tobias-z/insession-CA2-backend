@@ -3,15 +3,10 @@ package facades;
 import dtos.cityinfo.CityInfosDTO;
 import entities.cityinfo.CityInfo;
 import entities.cityinfo.CityInfoRepository;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.Connection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.WebApplicationException;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import utils.ScriptUtils;
 
 public class CityInfoFacade implements CityInfoRepository {

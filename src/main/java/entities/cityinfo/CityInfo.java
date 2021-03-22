@@ -1,6 +1,9 @@
 package entities.cityinfo;
 
+import entities.Address;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -26,12 +30,21 @@ public class CityInfo implements Serializable {
     @Column(length = 35)
     private String city;
 
+    @OneToMany(mappedBy = "cityInfo")
+    private List<Address> addresses;
+
     public CityInfo() {
     }
 
     public CityInfo(String zipCode, String city) {
         this.zipCode = zipCode;
         this.city = city;
+        this.addresses = new ArrayList<>();
+    }
+
+
+    public void addAddress(Address address) {
+        this.addresses.add(address);
     }
 
     public String getZipCode() {
@@ -48,6 +61,10 @@ public class CityInfo implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
     @Override

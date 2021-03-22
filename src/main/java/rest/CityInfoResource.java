@@ -8,7 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import rest.provider.Provider;
 
-@Path("city")
+@Path("cities")
 public class CityInfoResource extends Provider {
 
     private final CityInfoRepository REPO = CityInfoFacade.getInstance(EMF);

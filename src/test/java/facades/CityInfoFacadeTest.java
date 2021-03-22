@@ -4,13 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import dtos.cityinfo.CityInfosDTO;
 import entities.cityinfo.CityInfoRepository;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.Connection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
