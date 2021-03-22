@@ -21,9 +21,6 @@ public class Address implements Serializable {
     private static final long serialVersionUID = -2623243581967034060L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer addressId;
-
     @Column(unique = true, nullable = false, length = 50)
     private String street;
 
@@ -46,14 +43,6 @@ public class Address implements Serializable {
             this.cityInfo = cityInfo;
             cityInfo.addAddress(this);
         }
-    }
-
-    public void setAddressId(Integer id) {
-        this.addressId = id;
-    }
-
-    public Integer getAddressId() {
-        return addressId;
     }
 
     public String getStreet() {
@@ -79,7 +68,6 @@ public class Address implements Serializable {
     @Override
     public String toString() {
         return "Address{" +
-            "addressId=" + addressId +
             ", street='" + street + '\'' +
             ", additionalInfo='" + additionalInfo + '\'' +
             ", cityInfo=" + cityInfo +
@@ -95,14 +83,13 @@ public class Address implements Serializable {
             return false;
         }
         Address address = (Address) o;
-        return Objects.equals(getAddressId(), address.getAddressId()) && Objects
-            .equals(getStreet(), address.getStreet()) && Objects
+        return Objects.equals(getStreet(), address.getStreet()) && Objects
             .equals(getAdditionalInfo(), address.getAdditionalInfo()) && Objects
             .equals(getCityInfo(), address.getCityInfo());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAddressId(), getStreet(), getAdditionalInfo(), getCityInfo());
+        return Objects.hash(getStreet(), getAdditionalInfo(), getCityInfo());
     }
 }

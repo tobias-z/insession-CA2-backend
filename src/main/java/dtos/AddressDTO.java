@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class AddressDTO {
 
-    private Integer id;
     private String street;
     private String additionalInfo;
     CityInfoDTO cityInfoDTO;
@@ -15,7 +14,6 @@ public class AddressDTO {
     }
 
     public AddressDTO(Address address) {
-        this.id = address.getAddressId();
         this.street = address.getStreet();
         this.additionalInfo = address.getAdditionalInfo();
         this.cityInfoDTO = new CityInfoDTO(address.getCityInfo());
@@ -29,14 +27,6 @@ public class AddressDTO {
 
     public void setCityInfoDTO(CityInfoDTO cityInfoDTO) {
         this.cityInfoDTO = cityInfoDTO;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getStreet() {
@@ -62,7 +52,6 @@ public class AddressDTO {
     @Override
     public String toString() {
         return "AddressDTO{" +
-            "id=" + id +
             ", street='" + street + '\'' +
             ", additionalInfo='" + additionalInfo + '\'' +
             ", cityInfoDTO=" + cityInfoDTO +
@@ -78,14 +67,13 @@ public class AddressDTO {
             return false;
         }
         AddressDTO that = (AddressDTO) o;
-        return Objects.equals(getId(), that.getId()) && Objects
-            .equals(getStreet(), that.getStreet()) && Objects
+        return Objects.equals(getStreet(), that.getStreet()) && Objects
             .equals(getAdditionalInfo(), that.getAdditionalInfo()) && Objects
             .equals(getCityInfoDTO(), that.getCityInfoDTO());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getStreet(), getAdditionalInfo(), getCityInfoDTO());
+        return Objects.hash(getStreet(), getAdditionalInfo(), getCityInfoDTO());
     }
 }

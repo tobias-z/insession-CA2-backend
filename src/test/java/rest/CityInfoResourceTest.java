@@ -9,16 +9,11 @@ import dtos.cityinfo.CityInfoDTO;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.sql.Connection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -90,7 +85,7 @@ class CityInfoResourceTest {
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/city").then().statusCode(200);
+        given().when().get("/cities").then().statusCode(200);
     }
 
 
@@ -100,7 +95,7 @@ class CityInfoResourceTest {
 
         foundCities = given()
             .contentType(ContentType.JSON)
-            .get("/city")
+            .get("/cities")
             .then()
             .statusCode(200)
             .extract().body().jsonPath().getList("all", CityInfoDTO.class);
@@ -113,7 +108,7 @@ class CityInfoResourceTest {
     void runMigrationScript() {
         given()
             .contentType(ContentType.JSON)
-            .get("/city/runscript")
+            .get("/cities/runscript")
             .then()
             .statusCode(200)
             .body("worked", equalTo("yay!"));
