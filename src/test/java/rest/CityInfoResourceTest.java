@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
+import utils.ScriptUtils;
 
 class CityInfoResourceTest {
 
@@ -65,18 +66,10 @@ class CityInfoResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        InputStream stream = CityInfoResourceTest.class.getClassLoader().getResourceAsStream("zipScript.sql");
-        if (stream == null) {
-            System.out.println("Migration file, does not exist: ");
-            throw new RuntimeException("zipScript.sql");
-        }
         try {
             em.getTransaction().begin();
-            Connection connection = em.unwrap(Connection.class);
-            ScriptRunner runner = new ScriptRunner(connection);
-            runner.runScript(new BufferedReader(new InputStreamReader(stream)));
+            ScriptUtils.runSQLScript("zipScript.sql", em);
             em.getTransaction().commit();
-            System.out.println("Finished running script");
         } finally {
             em.close();
         }
