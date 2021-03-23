@@ -7,13 +7,12 @@ package facades;
 
 import dtos.PersonDTO;
 import dtos.PersonsDTO;
-import entities.Person;
-import entities.PersonRepository;
+import entities.person.Person;
+import entities.person.PersonRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import javax.ws.rs.WebApplicationException;
-import utils.EMF_Creator;
 import utils.ScriptUtils;
 
 
@@ -53,9 +52,13 @@ public class PersonFacade implements PersonRepository{
     
     // Create new person
     @Override
-    public PersonDTO addPerson(String email, String firstname, String lastName ) {
+    public PersonDTO create(String email, String firstname, String lastName ) {
         EntityManager em = getEntityManager();
         Person person = new Person(email, firstname, lastName);
+        
+         if ((firstname.length() == 0) || (lastName.length() == 0)){
+           throw new WebApplicationException("Name is missing", 400); 
+        }
         
         try {
         em.getTransaction().begin();
@@ -70,6 +73,7 @@ public class PersonFacade implements PersonRepository{
     
     
     // Edit person
+    @Override
     public PersonDTO editPerson(PersonDTO p) {
         EntityManager em = getEntityManager();
        
@@ -95,7 +99,16 @@ public class PersonFacade implements PersonRepository{
 
     @Override
     public PersonDTO getById(int id) throws WebApplicationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       EntityManager em = getEntityManager();
+       try {
+           Person person = em.find(Person.class, id);
+           if (person == null) {
+                throw new WebApplicationException(String.format("Person with id: (%d) not found", id), 404);
+            }
+           return new PersonDTO(person);
+       } finally {
+           em.close();
+       }
     }
     
      @Override

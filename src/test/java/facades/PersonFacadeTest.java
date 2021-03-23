@@ -9,10 +9,14 @@ import dtos.PersonDTO;
 import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import entities.Person;
+import entities.person.Person;
+import static io.restassured.RestAssured.given;
+import io.restassured.http.ContentType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,12 +77,13 @@ public class PersonFacadeTest {
     public void testAddPerson() {
         PersonDTO p;
         try {
-            p = facade.addPerson("Gunner", "Nu", "Hansen");
+            p = facade.create("Gunner", "Nu", "Hansen");
             assertEquals("Nu", p.getFirstName().toString());
         } catch ( Exception e ) {
             System.out.println("testAddPerson: Something went wrong");
         }        
     }
+    
     
     @Test
     public void testEditPerson() {

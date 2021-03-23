@@ -5,7 +5,7 @@
  */
 package dtos;
 
-import entities.Person;
+import entities.person.Person;
 import java.util.ArrayList;
 import java.util.List;
 

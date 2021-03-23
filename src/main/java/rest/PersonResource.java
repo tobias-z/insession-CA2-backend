@@ -1,28 +1,27 @@
 package rest;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dtos.PersonDTO;
 import dtos.PersonsDTO;
-import entities.PersonRepository;
+
+import entities.person.PersonRepository;
 import facades.PersonFacade;
-import facades.Populator;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import rest.provider.Provider;
-import utils.ScriptUtils;
 
 //Todo Remove or change relevant parts before ACTUAL use
 //Consumes and produces are provided by the provider
-@Path("person")
+@Path("persons")
 public class PersonResource extends Provider {
 
     private final PersonRepository REPO = PersonFacade.getPersonFacade(EMF);
+     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   
 
     @Override
@@ -40,6 +39,27 @@ public class PersonResource extends Provider {
         return Response.ok(okayResponse).build();
     }
     
+    @POST
+    @Override
+    public Response create(String person) {
+        PersonDTO p = GSON.fromJson(person, PersonDTO.class);
+        PersonDTO newPerson = REPO.create(p.getEmail(), p.getFirstName(), p.getLastName());
+        return Response.ok(GSON.toJson(newPerson)).build();
+    }
+    
+    
+
+    @PUT
+    @Path("{id}")
+    @Override
+    public Response update(@PathParam("id") int id, String person) {
+        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
+        pDTO.setId(id);
+        PersonDTO pEdited = REPO.editPerson(pDTO);
+        return Response.ok(GSON.toJson(pEdited)).build();
+    }
+    
+   
     
     @Override
     public Response delete(int id) {
@@ -48,21 +68,12 @@ public class PersonResource extends Provider {
     }
 
    
-
+    @Path("{id}")
+    @GET
     @Override
-    public Response update(int id, String requestBody) {
-        //TODO (tz): implement this!
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public Response getById(@PathParam("id") int id ) {
+        PersonDTO p = REPO.getById(id);
+        return Response.ok(GSON.toJson(p)).build();
     }
-
-    @Override
-    public Response getById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Response create(String requestBody) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
 }
