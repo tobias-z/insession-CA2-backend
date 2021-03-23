@@ -6,9 +6,8 @@ import dtos.cityinfo.CityInfosDTO;
 import entities.cityinfo.CityInfoRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 import utils.ScriptUtils;
@@ -22,10 +21,6 @@ class CityInfoFacadeTest {
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         repo = CityInfoFacade.getInstance(emf);
-    }
-
-    @BeforeEach
-    void setUp() {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -36,8 +31,8 @@ class CityInfoFacadeTest {
         }
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    static void tearDown() {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();

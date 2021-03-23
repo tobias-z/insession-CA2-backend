@@ -50,16 +50,6 @@ class CityInfoResourceTest {
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
-    }
-
-    @AfterAll
-    public static void closeTestServer() {
-        EMF_Creator.endREST_TestWithDB();
-        httpServer.shutdownNow();
-    }
-
-    @BeforeEach
-    public void setUp() {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -70,8 +60,10 @@ class CityInfoResourceTest {
         }
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    public static void closeTestServer() {
+        EMF_Creator.endREST_TestWithDB();
+        httpServer.shutdownNow();
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
