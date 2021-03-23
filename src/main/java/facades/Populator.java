@@ -5,19 +5,15 @@
  */
 package facades;
 
-import dtos.RenameMeDTO;
-import entities.renameme.RenameMeRepository;
+
 import javax.persistence.EntityManagerFactory;
 import utils.EMF_Creator;
 
 public class Populator {
     public static void populate(){
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        RenameMeRepository repo = FacadeExample.getInstance(emf);
-        repo.create(new RenameMeDTO("First 1", "Last 1"));
-        repo.create(new RenameMeDTO("First 2", "Last 2"));
-        repo.create(new RenameMeDTO("First 3", "Last 3"));
-
+        PersonFacade facade = PersonFacade.getPersonFacade(emf);
+        facade.addPerson("Test@Test.dk", "Test", "Test");        
     }
     
     public static void main(String[] args) {

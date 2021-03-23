@@ -6,19 +6,22 @@
 package facades;
 
 import dtos.PersonDTO;
+import dtos.PersonsDTO;
 import entities.Person;
+import entities.PersonRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+
 import javax.ws.rs.WebApplicationException;
 import utils.EMF_Creator;
+import utils.ScriptUtils;
 
 
 /**
  *
  * @author peter
  */
-public class PersonFacade {
+public class PersonFacade implements PersonRepository{
     
     private static PersonFacade instance;
     private static EntityManagerFactory emf;
@@ -34,11 +37,22 @@ public class PersonFacade {
     }
     
     private EntityManager getEntityManager() {
-        // emf = Persistence.createEntityManagerFactory("pu");
         return emf.createEntityManager();
     }
     
+    @Override
+    public PersonsDTO getAll() throws WebApplicationException {
+        EntityManager em = getEntityManager();
+        try {
+            return new PersonsDTO(em.createNamedQuery("Person.getAllRows").getResultList());
+        } finally {
+            em.close();
+        }
+        
+    } 
+    
     // Create new person
+    @Override
     public PersonDTO addPerson(String email, String firstname, String lastName ) {
         EntityManager em = getEntityManager();
         Person person = new Person(email, firstname, lastName);
@@ -78,13 +92,29 @@ public class PersonFacade {
           em.close();
         }   
     }
-    
-    public static void main(String[] args) {
-        
-        PersonFacade x = getPersonFacade(EMF_Creator.createEntityManagerFactory()); // new PersonFacade();
-        x.addPerson("Hans", "Jørgen", "Tumlesen");
-        
+
+    @Override
+    public PersonDTO getById(int id) throws WebApplicationException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+     @Override
+        public void runMigrationScript() throws WebApplicationException {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            // Dropping the table each time because otherwise it may cause multiple entry errors
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            ScriptUtils.runSQLScript("nameScript.sql", em);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
+    }
+    
+   
     
    
 }

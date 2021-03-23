@@ -92,7 +92,7 @@ class CityInfoResourceTest {
             .statusCode(200)
             .extract().body().jsonPath().getList("all", CityInfoDTO.class);
 
-        assertThat(foundCities, hasItem(new CityInfoDTO("0877", "København C")));
+        assertThat(foundCities, hasItem(new CityInfoDTO("2500", "Valby")));
 
     }
 

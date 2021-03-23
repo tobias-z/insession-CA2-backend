@@ -22,12 +22,12 @@ public class ApplicationConfig extends Application {
 	 */
 	private void addRestResourceClasses(Set<Class<?>> resources) {
 		resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
+		resources.add(rest.CityInfoResource.class);
+		resources.add(rest.PersonResource.class);
 		resources.add(rest.RenameMeResource.class);
 		resources.add(utils.cors.CorsRequestFilter.class);
 		resources.add(utils.cors.CorsResponseFilter.class);
 		resources.add(utils.errorhandling.GenericExceptionMapper.class);
-		resources.add(rest.RenameMeResource.class);
-		resources.add(rest.CityInfoResource.class);
 	}
 
 }
