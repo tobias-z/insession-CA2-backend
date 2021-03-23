@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="devops-starter:war exploded">
-    <output-path>$PROJECT_DIR$/target/testing-startcode-1.0.1</output-path>
+    <output-path>$PROJECT_DIR$/target/insession-CA2-1.0.1</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
@@ -51,10 +51,11 @@
           <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.8.6" />
           <element id="library" level="project" name="Maven: org.glassfish.hk2.external:jakarta.inject:2.6.1" />
           <element id="library" level="project" name="Maven: jakarta.ws.rs:jakarta.ws.rs-api:2.1.6" />
+          <element id="library" level="project" name="Maven: org.mybatis:mybatis:3.5.5" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/testing-startcode-1.0.1/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/insession-CA2-1.0.1/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="devops-starter/web/Web" />
     </root>

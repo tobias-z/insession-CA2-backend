@@ -26,6 +26,8 @@ public class ApplicationConfig extends Application {
 		resources.add(utils.cors.CorsRequestFilter.class);
 		resources.add(utils.cors.CorsResponseFilter.class);
 		resources.add(utils.errorhandling.GenericExceptionMapper.class);
+		resources.add(rest.RenameMeResource.class);
+		resources.add(rest.CityInfoResource.class);
 	}
 
 }
