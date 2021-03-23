@@ -34,7 +34,7 @@ public class PersonFacade {
     }
     
     private EntityManager getEntityManager() {
-        emf = Persistence.createEntityManagerFactory("pu");
+        // emf = Persistence.createEntityManagerFactory("pu");
         return emf.createEntityManager();
     }
     
@@ -80,7 +80,8 @@ public class PersonFacade {
     }
     
     public static void main(String[] args) {
-        PersonFacade x = new PersonFacade();
+        
+        PersonFacade x = getPersonFacade(EMF_Creator.createEntityManagerFactory()); // new PersonFacade();
         x.addPerson("Hans", "Jørgen", "Tumlesen");
         
     }

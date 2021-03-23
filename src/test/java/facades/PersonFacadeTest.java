@@ -47,13 +47,13 @@ public class PersonFacadeTest {
     
     @BeforeEach
     public void setUp() {
-        emf = Persistence.createEntityManagerFactory("pu");
+       
         EntityManager em = emf.createEntityManager(); 
        
         try {
             em.getTransaction().begin();
             //em.createNamedQuery("Person.deleteAllRows").executeUpdate(); 
-            // em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             p1 = new Person("Test2", "Test2", "Test2");
             em.persist(p1);
             em.getTransaction().commit();
