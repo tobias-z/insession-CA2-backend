@@ -105,13 +105,25 @@ public class PersonFacade implements PersonRepository {
         editPerson.setEmail(p.getEmail());
         editPerson.setFirstName(p.getFirstName());
         editPerson.setLastName(p.getLastName());
+        
+        for (int i = 0; i < p.getPhones().size(); i++) {
+            PhoneDTO phoneDTO = p.getPhones().get(i);
+            try {
+            Phone phone = editPerson.getPhones().get(i);
+            phone.setNumber(phoneDTO.getNumber());
+            phone.setDescription(phoneDTO.getDescription());
+                } catch (IndexOutOfBoundsException e) {
+                //If a phone that doesnt already exist has been added, this will be thrown
+            editPerson.addPhone(new Phone(phoneDTO));
+    }
+}
 
-        for (PhoneDTO phoneDTO : p.getPhones()) {
-            for (Phone phone : editPerson.getPhones()) {
-                phone.setNumber(phoneDTO.getNumber());
-                phone.setDescription(phoneDTO.getDescription());
-            }
-        }
+//        for (PhoneDTO phoneDTO : p.getPhones()) {
+//            for (Phone phone : editPerson.getPhones()) {
+//                phone.setNumber(phoneDTO.getNumber());
+//                phone.setDescription(phoneDTO.getDescription());
+//            }
+//        }
 
         try {
             em.getTransaction().begin();

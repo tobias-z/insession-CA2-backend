@@ -1,12 +1,16 @@
 package entities.hobby;
 
+import entities.person.Person;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -28,6 +32,11 @@ public class Hobby implements Serializable {
     private String category;
 
     private String type;
+    
+    @ManyToMany(
+            mappedBy = "hobbies",
+            cascade = CascadeType.PERSIST)
+    List<Person> persons;
 
     public Hobby() {
     }
@@ -70,6 +79,12 @@ public class Hobby implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+    
+    public List<Person> getPersons() {
+        return persons;
+    }
+    
+  
 
     @Override
     public String toString() {
@@ -99,4 +114,12 @@ public class Hobby implements Serializable {
     public int hashCode() {
         return Objects.hash(getName(), getWikiLink(), getCategory(), getType());
     }
+   
+    // ??
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
+
+ 
+ 
 }
