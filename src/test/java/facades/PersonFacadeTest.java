@@ -6,12 +6,15 @@
 package facades;
 
 import dtos.PersonDTO;
+import dtos.PersonsDTO;
 import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import entities.person.Person;
 import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -67,12 +70,25 @@ public class PersonFacadeTest {
     }
         
     
-    
     @AfterEach
     public void tearDown() {
     }
+    
+    @Test
+    public void testGetall() {
+        List<PersonDTO> list = new ArrayList<>();
+        list.add(new PersonDTO(p1));
+        PersonsDTO pdto = facade.getAll();
+        assertEquals(list.size(), pdto.getAll().size());
+    }
+    
+    @Test
+    public void testGetById() {
+        int expected = p1.getId();
+        PersonDTO actual = facade.getById(p1.getId());
+        assertEquals(expected, actual.getId());
+    }
 
-   
     @Test
     public void testAddPerson() {
         PersonDTO p;
