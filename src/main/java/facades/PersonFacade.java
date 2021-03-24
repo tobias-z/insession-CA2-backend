@@ -68,7 +68,7 @@ public class PersonFacade implements PersonRepository{
         } finally {
           em.close();
         }
-        return new PersonDTO();
+        return new PersonDTO(person);
     }
     
     
