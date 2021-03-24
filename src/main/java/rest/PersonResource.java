@@ -43,7 +43,7 @@ public class PersonResource extends Provider {
     @Override
     public Response create(String person) {
         PersonDTO p = GSON.fromJson(person, PersonDTO.class);
-        PersonDTO newPerson = REPO.create(p.getEmail(), p.getFirstName(), p.getLastName());
+        PersonDTO newPerson = REPO.create(p);
         return Response.ok(GSON.toJson(newPerson)).build();
     }
     

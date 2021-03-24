@@ -1,7 +1,9 @@
 package entities;
 
 import entities.cityinfo.CityInfo;
+import entities.person.Person;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import org.apache.ibatis.annotations.One;
 
 @Entity
 @NamedQueries({
@@ -21,7 +25,7 @@ public class Address implements Serializable {
     private static final long serialVersionUID = -2623243581967034060L;
 
     @Id
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String street;
 
     private String additionalInfo;
@@ -44,6 +48,8 @@ public class Address implements Serializable {
             cityInfo.addAddress(this);
         }
     }
+
+    //TODO: Remove cityinfo method
 
     public String getStreet() {
         return street;
