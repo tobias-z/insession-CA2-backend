@@ -6,7 +6,7 @@ import javax.ws.rs.WebApplicationException;
 
 public interface PersonRepository {
 
-    public PersonDTO create(String email, String firstName, String lastName) throws WebApplicationException;
+    public PersonDTO create(PersonDTO personDTO) throws WebApplicationException;
     public PersonsDTO getAll() throws WebApplicationException;
     public PersonDTO getById(int id) throws WebApplicationException;
     public PersonDTO editPerson(PersonDTO p) throws WebApplicationException;
