@@ -8,6 +8,7 @@ package entities.person;
 import dtos.PersonDTO;
 import entities.Address;
 import entities.Phone;
+import entities.hobby.Hobby;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -44,12 +48,22 @@ public class Person implements Serializable {
         cascade = CascadeType.PERSIST
     )
     private List<Phone> phones;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "person_hobby", 
+            joinColumns = @JoinColumn(name = "person_id"), 
+            inverseJoinColumns = @JoinColumn(name = "hobby_name")
+    )
+    private List<Hobby> hobbies;
+    
 
     public Person(String email, String firstName, String lastName) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phones = new ArrayList<>();
+        this.hobbies = new ArrayList<>();
     }
 
     public Person() {
@@ -59,6 +73,13 @@ public class Person implements Serializable {
         if (phone != null) {
             this.phones.add(phone);
             phone.setPerson(this);
+        }
+    }
+    
+    public void addHobby(Hobby hobby) {
+        if (hobby != null) {
+            this.hobbies.add(hobby);
+            hobby.getPersons().add(this);
         }
     }
 
@@ -96,6 +117,10 @@ public class Person implements Serializable {
 
     public List<Phone> getPhones() {
         return phones;
+    }
+    
+     public List<Hobby> getHobbies() {
+        return hobbies;
     }
 
 }
