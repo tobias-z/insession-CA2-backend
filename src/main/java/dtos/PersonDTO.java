@@ -5,6 +5,7 @@
  */
 package dtos;
 
+import dtos.hobby.HobbyDTO;
 import entities.Phone;
 import entities.person.Person;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class PersonDTO {
     private String firstName;
     private String lastName;
     private List<PhoneDTO> phones;
+    private List<HobbyDTO> hobbies;
     
     public PersonDTO(Person p) {
         this.id = p.getId();
@@ -29,6 +31,15 @@ public class PersonDTO {
         this.firstName = p.getFirstName();
         this.lastName = p.getLastName();
         this.phones = PhoneDTO.getFromList(p.getPhones());
+        this.hobbies = HobbyDTO.getFromList(p.getHobbies());
+    }
+
+    public List<HobbyDTO> getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(List<HobbyDTO> hobbies) {
+        this.hobbies = hobbies;
     }
 
     public PersonDTO(String email, String firstName, String lastName) {

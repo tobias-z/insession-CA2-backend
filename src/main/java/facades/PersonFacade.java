@@ -8,7 +8,9 @@ package facades;
 import dtos.PersonDTO;
 import dtos.PersonsDTO;
 import dtos.PhoneDTO;
+import dtos.hobby.HobbyDTO;
 import entities.Phone;
+import entities.hobby.Hobby;
 import entities.person.Person;
 import entities.person.PersonRepository;
 import javax.persistence.EntityManager;
@@ -55,13 +57,25 @@ public class PersonFacade implements PersonRepository {
 
     // Create new person
     @Override
-    public PersonDTO create(PersonDTO personDTO) {
+    public PersonDTO create(PersonDTO personDTO) throws WebApplicationException{
         EntityManager em = getEntityManager();
         Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName());
+                
 
         if ((person.getFirstName().length() == 0) || (person.getLastName().length() == 0)) {
             throw new WebApplicationException("Name is missing", 400);
         }
+        
+        // Add Hobby to person
+        for (HobbyDTO hobbyDTO : personDTO.getHobbies() ) {
+                      
+           Hobby hobby = em.find(Hobby.class, hobbyDTO.getName());
+           if ( hobby == null ) {
+                throw new WebApplicationException("Hobby: " + hobby.getName() + "does not exist", 400);
+            }
+           person.addHobby(hobby);
+        }
+       
 
         // Add each phone to the person
         for (PhoneDTO phoneDTO : personDTO.getPhones()) {

@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -8,7 +8,9 @@ package facades;
 import dtos.PersonDTO;
 import dtos.PersonsDTO;
 import dtos.PhoneDTO;
+import dtos.hobby.HobbyDTO;
 import entities.Phone;
+import entities.hobby.Hobby;
 import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -36,6 +38,7 @@ public class PersonFacadeTest {
 
     private static Person p1;
     private static Phone phone1;
+    private static Hobby hobby1;
 
     private static EntityManagerFactory emf;
     private static PersonFacade facade;
@@ -60,12 +63,16 @@ public class PersonFacadeTest {
         EntityManager em = emf.createEntityManager();
         p1 = new Person("Test2", "Test2", "Test2");
         phone1 = new Phone("1234", "number");
+        hobby1 = new Hobby( "Turisme", "https://en.wikipedia.org/wiki/Tourism","Generel", "Konkurrence");
         p1.addPhone(phone1);
+        p1.addHobby(hobby1);
 
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            
             em.persist(p1);
             em.getTransaction().commit();
         } finally {
@@ -98,13 +105,19 @@ public class PersonFacadeTest {
         //setup
         PersonDTO p;
         Person person = new Person("Nu", "firstname", "lastname");
-        Phone phone1 = new Phone("1234567", "insane number");
+        Phone phone3 = new Phone("1234567", "insane number");
         Phone phone2 = new Phone("21314221", "even better number");
-        person.addPhone(phone1);
+        person.addPhone(phone3);
         person.addPhone(phone2);
+        // Hobby hobby = new Hobby("Turisme", "https://en.wikipedia.org/wiki/Tourism","Generel", "Konkurrence");
+        // person.addHobby(hobby);
 
         PersonDTO createdPerson = new PersonDTO(person);
         p = facade.create(createdPerson);
+        
+//        for (HobbyDTO hobbyDTO : p.getHobbies()) {
+//            assertNotNull(hobbyDTO);
+//        }
 
         assertEquals("Nu", p.getEmail());
         for (PhoneDTO phoneDTO : p.getPhones()) {

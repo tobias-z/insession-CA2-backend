@@ -79,7 +79,7 @@ public class Person implements Serializable {
     public void addHobby(Hobby hobby) {
         if (hobby != null) {
             this.hobbies.add(hobby);
-            hobby.setPersons((List<Person>) this); // serPersons Hobby. ln.118 ??
+            hobby.getPersons().add(this);
         }
     }
 
