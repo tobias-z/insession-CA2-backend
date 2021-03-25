@@ -2,6 +2,7 @@ package entities.hobby;
 
 import entities.person.Person;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -45,6 +46,7 @@ public class Hobby implements Serializable {
         this.wikiLink = wikiLink;
         this.category = category;
         this.type = type;
+        this.persons = new ArrayList<>();
     }
 
     public String getName() {

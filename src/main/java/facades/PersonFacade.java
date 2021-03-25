@@ -57,35 +57,35 @@ public class PersonFacade implements PersonRepository {
 
     // Create new person
     @Override
-    public PersonDTO create(PersonDTO personDTO) throws WebApplicationException{
+    public PersonDTO create(PersonDTO personDTO) throws WebApplicationException {
         EntityManager em = getEntityManager();
         Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName());
-                
 
         if ((person.getFirstName().length() == 0) || (person.getLastName().length() == 0)) {
             throw new WebApplicationException("Name is missing", 400);
         }
-        
+
         // Add Hobby to person
-        for (HobbyDTO hobbyDTO : personDTO.getHobbies() ) {
-                      
-           Hobby hobby = em.find(Hobby.class, hobbyDTO.getName());
-           if ( hobby == null ) {
-                throw new WebApplicationException("Hobby: " + hobby.getName() + "does not exist", 400);
+        for (HobbyDTO hobbyDTO : personDTO.getHobbies()) {
+
+            Hobby hobby = em.find(Hobby.class, hobbyDTO.getName());
+            if (hobby == null) {
+                throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist", 400);
             }
-           person.addHobby(hobby);
+            person.addHobby(hobby);
         }
-       
 
         // Add each phone to the person
         for (PhoneDTO phoneDTO : personDTO.getPhones()) {
 
             try {
-                Phone phoneAlreadyInUse = em.createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class)
+                Phone phoneAlreadyInUse = em
+                    .createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class)
                     .setParameter("number", phoneDTO.getNumber())
                     .getSingleResult();
 
-                throw new WebApplicationException("Phone with number: " + phoneAlreadyInUse.getNumber() + ", is already beeing used", 400);
+                throw new WebApplicationException(
+                    "Phone with number: " + phoneAlreadyInUse.getNumber() + ", is already beeing used", 400);
             } catch (NoResultException e) {
                 Phone phoneToAdd = new Phone(phoneDTO.getNumber(), phoneDTO.getDescription());
                 person.addPhone(phoneToAdd);
@@ -119,25 +119,35 @@ public class PersonFacade implements PersonRepository {
         editPerson.setEmail(p.getEmail());
         editPerson.setFirstName(p.getFirstName());
         editPerson.setLastName(p.getLastName());
-        
+
         for (int i = 0; i < p.getPhones().size(); i++) {
             PhoneDTO phoneDTO = p.getPhones().get(i);
             try {
-            Phone phone = editPerson.getPhones().get(i);
-            phone.setNumber(phoneDTO.getNumber());
-            phone.setDescription(phoneDTO.getDescription());
-                } catch (IndexOutOfBoundsException e) {
+                Phone phone = editPerson.getPhones().get(i);
+                phone.setNumber(phoneDTO.getNumber());
+                phone.setDescription(phoneDTO.getDescription());
+            } catch (IndexOutOfBoundsException e) {
                 //If a phone that doesnt already exist has been added, this will be thrown
-            editPerson.addPhone(new Phone(phoneDTO));
-    }
-}
+                editPerson.addPhone(new Phone(phoneDTO));
+            }
+        }
 
-//        for (PhoneDTO phoneDTO : p.getPhones()) {
-//            for (Phone phone : editPerson.getPhones()) {
-//                phone.setNumber(phoneDTO.getNumber());
-//                phone.setDescription(phoneDTO.getDescription());
-//            }
-//        }
+        for (int i = 0; i < p.getHobbies().size(); i++) {
+            HobbyDTO hobbyDTO = p.getHobbies().get(i);
+            try {
+                Hobby hobby = editPerson.getHobbies().get(i);
+                hobby.setName(hobbyDTO.getName());
+                hobby.setCategory(hobbyDTO.getCategory());
+                hobby.setType(hobbyDTO.getType());
+                hobby.setWikiLink(hobbyDTO.getWikiLink());
+            } catch (IndexOutOfBoundsException e) {
+                Hobby foundHobby = em.find(Hobby.class, hobbyDTO.getName());
+                if (foundHobby == null) {
+                    throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist", 400);
+                }
+                editPerson.addHobby(foundHobby);
+            }
+        }
 
         try {
             em.getTransaction().begin();
