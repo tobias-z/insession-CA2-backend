@@ -6,7 +6,10 @@
 package rest;
 
 import dtos.PersonDTO;
+import entities.Address;
 import entities.Phone;
+import entities.cityinfo.CityInfo;
+import entities.hobby.Hobby;
 import entities.person.Person;
 import io.restassured.RestAssured;
 
@@ -48,9 +51,15 @@ import utils.ScriptUtils;
 public class PersonResourceTest {
 
 
-    private static Person p1, p2, p3;
-    private static Phone phone1, phone2, phone3;
+    private static Person p1, p2;
+    private static Phone phone1, phone2;
+    private static Hobby hobby1, hobby2;
+    private static Address address1, address2;
+    private static CityInfo cityInfo1, cityInfo2;
 
+    // Used to edit
+    private static Hobby hobby3;
+    private static CityInfo cityInfo3;
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
@@ -88,25 +97,52 @@ public class PersonResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+        // Person 1 setup
         p1 = new Person("test1", "Test1", "Test1");
         phone1 = new Phone("1234", "number1");
         p1.addPhone(phone1);
+        hobby1 = new Hobby("Turisme", "https://en.wikipedia.org/wiki/Tourism", "Generel", "Konkurrence");
+        address1 = new Address("street", "Info");
+        cityInfo1 = new CityInfo("0894", "Udbetaling");
 
+        // Person 2 setup
         p2 = new Person("test2", "Test2", "Test2");
         phone2 = new Phone("12345", "number2");
         p2.addPhone(phone2);
+        hobby2 = new Hobby("Bordtennis", "https://en.wikipedia.org/wiki/Table_tennis","Generel"," Konkurrence");
+        address2 = new Address("address2j", "Info");
+        cityInfo2 = new CityInfo("2800", "Kongens Lyngby");
 
-        p3 = new Person("test3", "Test3", "Test3");
-        phone3 = new Phone("4321", "number3");
-        p3.addPhone(phone3);
+        // These are not put on the person
+        hobby3 = new Hobby("Hobby3", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
+        cityInfo3 = new CityInfo("0899", "Kommuneservice");
 
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
+
+            // Person 1
+            em.persist(hobby1);
+            em.persist(cityInfo1);
+            p1.addHobby(hobby1);
+            address1.setCityInfo(cityInfo1);
+            p1.setAddress(address1);
+
+            // Person 2
+            em.persist(hobby2);
+            em.persist(cityInfo2);
+            p2.addHobby(hobby2);
+            address2.setCityInfo(cityInfo2);
+            p2.setAddress(address2);
+
             em.persist(p1);
             em.persist(p2);
-            em.persist(p3);
+            em.persist(hobby3);
+            em.persist(cityInfo3);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -132,9 +168,16 @@ public class PersonResourceTest {
 
     @Test
     public void testCreate() {
+        // Setup PersonDTO
         Person person = new Person("Egon", "Keld", "Benny");
         Phone phone = new Phone("654321", "this is an awesome number");
         person.addPhone(phone);
+        Hobby hobby = new Hobby("Hobby3", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
+        person.addHobby(hobby);
+        Address address = new Address("insanestreet", "this is a street");
+        address.setCityInfo(new CityInfo("0899", "Kommuneservice"));
+        person.setAddress(address);
+
         PersonDTO requestBody = new PersonDTO(person);
 
         given()
@@ -152,6 +195,12 @@ public class PersonResourceTest {
         Person person = new Person("Ego", "Keld", "Benny");
         Phone phone = new Phone("654321", "this is an awesome number");
         person.addPhone(phone);
+        Hobby hobby = new Hobby("anotherhobby", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
+        person.addHobby(hobby);
+        Address address = new Address("insanestreet", "this is a street");
+        address.setCityInfo(new CityInfo("0899", "Kommuneservice"));
+        person.setAddress(address);
+
         PersonDTO requestBody = new PersonDTO(person);
 
         given()

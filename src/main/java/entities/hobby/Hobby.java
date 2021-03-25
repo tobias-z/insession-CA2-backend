@@ -25,7 +25,10 @@ public class Hobby implements Serializable {
     private static final long serialVersionUID = 2701673906158199769L;
 
     @Id
-    @Column(length = 50)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer hobbyId;
+
+    @Column(length = 50, unique = true)
     private String name;
 
     private String wikiLink;
@@ -47,6 +50,14 @@ public class Hobby implements Serializable {
         this.category = category;
         this.type = type;
         this.persons = new ArrayList<>();
+    }
+
+    public Integer getHobbyId() {
+        return hobbyId;
+    }
+
+    public void setHobbyId(Integer hobbyId) {
+        this.hobbyId = hobbyId;
     }
 
     public String getName() {
@@ -106,16 +117,17 @@ public class Hobby implements Serializable {
             return false;
         }
         Hobby hobby = (Hobby) o;
-        return Objects.equals(getName(), hobby.getName()) && Objects
-            .equals(getWikiLink(), hobby.getWikiLink()) && Objects
-            .equals(getCategory(), hobby.getCategory()) && Objects.equals(getType(), hobby.getType());
+        return Objects.equals(getHobbyId(), hobby.getHobbyId()) && Objects
+            .equals(getName(), hobby.getName()) && Objects.equals(getWikiLink(), hobby.getWikiLink())
+            && Objects.equals(getCategory(), hobby.getCategory()) && Objects
+            .equals(getType(), hobby.getType()) && Objects.equals(getPersons(), hobby.getPersons());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getWikiLink(), getCategory(), getType());
+        return Objects.hash(getHobbyId(), getName(), getWikiLink(), getCategory(), getType(), getPersons());
     }
-   
+
     // ??
     public void setPersons(List<Person> persons) {
         this.persons = persons;

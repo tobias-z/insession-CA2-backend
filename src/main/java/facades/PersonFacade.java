@@ -9,7 +9,9 @@ import dtos.PersonDTO;
 import dtos.PersonsDTO;
 import dtos.PhoneDTO;
 import dtos.hobby.HobbyDTO;
+import entities.Address;
 import entities.Phone;
+import entities.cityinfo.CityInfo;
 import entities.hobby.Hobby;
 import entities.person.Person;
 import entities.person.PersonRepository;
@@ -67,12 +69,14 @@ public class PersonFacade implements PersonRepository {
 
         // Add Hobby to person
         for (HobbyDTO hobbyDTO : personDTO.getHobbies()) {
-
-            Hobby hobby = em.find(Hobby.class, hobbyDTO.getName());
-            if (hobby == null) {
+            try {
+                Hobby hobby = em.createQuery("SELECT h FROM Hobby h WHERE h.name = :hobby", Hobby.class)
+                    .setParameter("hobby", hobbyDTO.getName())
+                    .getSingleResult();
+                person.addHobby(hobby);
+            } catch (NoResultException err) {
                 throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist", 400);
             }
-            person.addHobby(hobby);
         }
 
         // Add each phone to the person
@@ -93,6 +97,17 @@ public class PersonFacade implements PersonRepository {
 
         }
 
+        // Create address
+        Address address = new Address(personDTO.getAddress().getStreet(),
+            personDTO.getAddress().getAdditionalInfo());
+        CityInfo cityInfo = em.find(CityInfo.class, personDTO.getAddress().getCityInfo().getZipCode());
+        if (cityInfo == null) {
+            throw new WebApplicationException(
+                "No such zipCode exists: " + personDTO.getAddress().getCityInfo().getZipCode(), 400);
+        }
+        address.setCityInfo(cityInfo);
+        person.setAddress(address);
+
         try {
             em.getTransaction().begin();
             em.persist(person);
@@ -102,7 +117,6 @@ public class PersonFacade implements PersonRepository {
         }
         return new PersonDTO(person);
     }
-
 
     // Edit person
     @Override
@@ -120,6 +134,7 @@ public class PersonFacade implements PersonRepository {
         editPerson.setFirstName(p.getFirstName());
         editPerson.setLastName(p.getLastName());
 
+        // Edit phones
         for (int i = 0; i < p.getPhones().size(); i++) {
             PhoneDTO phoneDTO = p.getPhones().get(i);
             try {
@@ -132,6 +147,7 @@ public class PersonFacade implements PersonRepository {
             }
         }
 
+        // Edit hobbies
         for (int i = 0; i < p.getHobbies().size(); i++) {
             HobbyDTO hobbyDTO = p.getHobbies().get(i);
             try {
@@ -141,12 +157,34 @@ public class PersonFacade implements PersonRepository {
                 hobby.setType(hobbyDTO.getType());
                 hobby.setWikiLink(hobbyDTO.getWikiLink());
             } catch (IndexOutOfBoundsException e) {
-                Hobby foundHobby = em.find(Hobby.class, hobbyDTO.getName());
-                if (foundHobby == null) {
-                    throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist", 400);
+                try {
+                    Hobby foundHobby = em
+                        .createQuery("SELECT h FROM Hobby h WHERE h.name = :hobby", Hobby.class)
+                        .setParameter("hobby", hobbyDTO.getName())
+                        .getSingleResult();
+                    editPerson.addHobby(foundHobby);
+                } catch (NoResultException error) {
+                    throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist",
+                        400);
                 }
-                editPerson.addHobby(foundHobby);
             }
+        }
+
+        // Edit address
+        Address addressInUse = em.find(Address.class, p.getAddress().getStreet());
+        if (addressInUse != null) {
+            // use this address
+            editPerson.setAddress(addressInUse);
+        } else {
+            // create a new address
+            Address newAddress = new Address(p.getAddress().getStreet(), p.getAddress().getAdditionalInfo());
+            CityInfo cityInfo = em.find(CityInfo.class, p.getAddress().getCityInfo().getZipCode());
+            if (cityInfo == null) {
+                throw new WebApplicationException(
+                    "Zipcode: " + p.getAddress().getCityInfo().getZipCode() + ", does not exist", 404);
+            }
+            newAddress.setCityInfo(cityInfo);
+            editPerson.setAddress(newAddress);
         }
 
         try {

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class HobbyDTO {
 
+    private Integer id;
     private String name;
     private String wikiLink;
     private String category;
@@ -26,10 +27,19 @@ public class HobbyDTO {
     }
 
     public HobbyDTO(Hobby hobby) {
+        this.id = hobby.getHobbyId();
         this.name = hobby.getName();
         this.wikiLink = hobby.getWikiLink();
         this.category = hobby.getCategory();
         this.type = hobby.getType();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -67,7 +77,8 @@ public class HobbyDTO {
     @Override
     public String toString() {
         return "HobbyDTO{" +
-            "name='" + name + '\'' +
+            "id=" + id +
+            ", name='" + name + '\'' +
             ", wikiLink='" + wikiLink + '\'' +
             ", category='" + category + '\'' +
             ", type='" + type + '\'' +
@@ -83,7 +94,8 @@ public class HobbyDTO {
             return false;
         }
         HobbyDTO hobbyDTO = (HobbyDTO) o;
-        return Objects.equals(getName(), hobbyDTO.getName()) && Objects
+        return Objects.equals(getId(), hobbyDTO.getId()) && Objects
+            .equals(getName(), hobbyDTO.getName()) && Objects
             .equals(getWikiLink(), hobbyDTO.getWikiLink()) && Objects
             .equals(getCategory(), hobbyDTO.getCategory()) && Objects
             .equals(getType(), hobbyDTO.getType());
@@ -91,6 +103,6 @@ public class HobbyDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getWikiLink(), getCategory(), getType());
+        return Objects.hash(getId(), getName(), getWikiLink(), getCategory(), getType());
     }
 }

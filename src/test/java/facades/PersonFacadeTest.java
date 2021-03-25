@@ -9,7 +9,9 @@
     import dtos.PersonsDTO;
     import dtos.PhoneDTO;
     import dtos.hobby.HobbyDTO;
+    import entities.Address;
     import entities.Phone;
+    import entities.cityinfo.CityInfo;
     import entities.hobby.Hobby;
     import utils.EMF_Creator;
     import javax.persistence.EntityManager;
@@ -40,6 +42,9 @@
         private static Phone phone1;
         private static Hobby hobby1;
         private static Hobby hobby2;
+        private static Address address1;
+        private static CityInfo cityInfo1;
+        private static CityInfo cityInfo2;
 
         private static EntityManagerFactory emf;
         private static PersonFacade facade;
@@ -65,9 +70,12 @@
             p1 = new Person("Test2", "Test2", "Test2");
             phone1 = new Phone("1234", "number");
             hobby1 = new Hobby("Turisme", "https://en.wikipedia.org/wiki/Tourism", "Generel", "Konkurrence");
+            address1 = new Address("street", "Info");
+            cityInfo1 = new CityInfo("0894", "Udbetaling");
 
-            // This hobby is not added to the person
+            // These are not put on the person
             hobby2 = new Hobby("Hobby2", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
+            cityInfo2 = new CityInfo("0899", "Kommuneservice");
 
             p1.addPhone(phone1);
 
@@ -76,10 +84,18 @@
                 em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
                 em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
                 em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+                em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+                em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
                 em.persist(hobby1);
+                em.persist(cityInfo1);
                 p1.addHobby(hobby1);
+
+                address1.setCityInfo(cityInfo1);
+                p1.setAddress(address1);
+
                 em.persist(p1);
                 em.persist(hobby2);
+                em.persist(cityInfo2);
                 em.getTransaction().commit();
             } finally {
                 em.close();
@@ -118,6 +134,9 @@
             Hobby hobby = new Hobby("Turisme", "https://en.wikipedia.org/wiki/Tourism", "Generel",
                 "Konkurrence");
             person.addHobby(hobby);
+            Address address = new Address("insanestreet", "this is a street");
+            address.setCityInfo(new CityInfo("0899", "Kommuneservice"));
+            person.setAddress(address);
 
             PersonDTO createdPerson = new PersonDTO(person);
             p = facade.create(createdPerson);
@@ -130,6 +149,8 @@
             for (PhoneDTO phoneDTO : p.getPhones()) {
                 assertNotNull(phoneDTO);
             }
+
+            assertEquals(address.getStreet(), createdPerson.getAddress().getStreet());
         }
 
 
@@ -140,6 +161,9 @@
             p1.addPhone(new Phone("4321", "this is a description"));
             Hobby hobby = new Hobby("Hobby2", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
             p1.addHobby(hobby);
+            Address address = new Address("Anotherstreeet", "Kommuneservice");
+            address.setCityInfo(cityInfo2);
+            p1.setAddress(address);
 
             PersonDTO p1New = facade.editPerson(new PersonDTO(p1));
             assertEquals(p1New.getLastName(), p1.getLastName());
@@ -151,6 +175,7 @@
                 assertEquals(p1.getHobbies().get(i).getName(), p1New.getHobbies().get(i).getName());
             }
 
+            assertEquals(address.getStreet(), p1New.getAddress().getStreet());
 
         }
 

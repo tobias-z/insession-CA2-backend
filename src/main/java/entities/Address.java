@@ -3,8 +3,10 @@ package entities;
 import entities.cityinfo.CityInfo;
 import entities.person.Person;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,12 +35,16 @@ public class Address implements Serializable {
     @ManyToOne
     private CityInfo cityInfo;
 
+    @OneToMany(mappedBy = "address")
+    private List<Person> people;
+
     public Address() {
     }
 
     public Address(String street, String additionalInfo) {
         this.street = street;
         this.additionalInfo = additionalInfo;
+        this.people = new ArrayList<>();
     }
 
     // Making sure to keep track of both counterparts
@@ -48,8 +54,6 @@ public class Address implements Serializable {
             cityInfo.addAddress(this);
         }
     }
-
-    //TODO: Remove cityinfo method
 
     public String getStreet() {
         return street;
@@ -69,6 +73,14 @@ public class Address implements Serializable {
 
     public CityInfo getCityInfo() {
         return cityInfo;
+    }
+
+    public List<Person> getPeople() {
+        return people;
+    }
+
+    public void setPeople(List<Person> people) {
+        this.people = people;
     }
 
     @Override

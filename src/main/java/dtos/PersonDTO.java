@@ -24,6 +24,7 @@ public class PersonDTO {
     private String lastName;
     private List<PhoneDTO> phones;
     private List<HobbyDTO> hobbies;
+    private AddressDTO address;
     
     public PersonDTO(Person p) {
         this.id = p.getId();
@@ -32,6 +33,7 @@ public class PersonDTO {
         this.lastName = p.getLastName();
         this.phones = PhoneDTO.getFromList(p.getPhones());
         this.hobbies = HobbyDTO.getFromList(p.getHobbies());
+        this.address = new AddressDTO(p.getAddress());
     }
 
     public List<HobbyDTO> getHobbies() {
@@ -49,7 +51,7 @@ public class PersonDTO {
     }
     
     public static List<PersonDTO> getDTOs(List<Person> pers) {
-        List<PersonDTO> pdtos = new ArrayList();
+        List<PersonDTO> pdtos = new ArrayList<>();
         pers.forEach(per -> pdtos.add(new PersonDTO(per)));
         return pdtos;
     }
@@ -97,6 +99,14 @@ public class PersonDTO {
         this.phones = phones;
     }
 
+    public AddressDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressDTO address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "PersonDTO{" +
@@ -105,6 +115,8 @@ public class PersonDTO {
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", phones=" + phones +
+            ", hobbies=" + hobbies +
+            ", address=" + address +
             '}';
     }
 
@@ -120,11 +132,15 @@ public class PersonDTO {
         return getId() == personDTO.getId() && Objects.equals(getEmail(), personDTO.getEmail())
             && Objects.equals(getFirstName(), personDTO.getFirstName()) && Objects
             .equals(getLastName(), personDTO.getLastName()) && Objects
-            .equals(getPhones(), personDTO.getPhones());
+            .equals(getPhones(), personDTO.getPhones()) && Objects
+            .equals(getHobbies(), personDTO.getHobbies()) && Objects
+            .equals(getAddress(), personDTO.getAddress());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail(), getFirstName(), getLastName(), getPhones());
+        return Objects
+            .hash(getId(), getEmail(), getFirstName(), getLastName(), getPhones(), getHobbies(),
+                getAddress());
     }
 }

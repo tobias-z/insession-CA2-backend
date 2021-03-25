@@ -8,7 +8,7 @@ public class AddressDTO {
 
     private String street;
     private String additionalInfo;
-    CityInfoDTO cityInfoDTO;
+    CityInfoDTO cityInfo;
 
     public AddressDTO() {
     }
@@ -16,17 +16,17 @@ public class AddressDTO {
     public AddressDTO(Address address) {
         this.street = address.getStreet();
         this.additionalInfo = address.getAdditionalInfo();
-        this.cityInfoDTO = new CityInfoDTO(address.getCityInfo());
+        this.cityInfo = new CityInfoDTO(address.getCityInfo());
     }
 
     public AddressDTO(String street, String additionalInfo, CityInfoDTO cityInfoDTO) {
         this.street = street;
         this.additionalInfo = additionalInfo;
-        this.cityInfoDTO = cityInfoDTO;
+        this.cityInfo = cityInfoDTO;
     }
 
-    public void setCityInfoDTO(CityInfoDTO cityInfoDTO) {
-        this.cityInfoDTO = cityInfoDTO;
+    public void setCityInfo(CityInfoDTO cityInfo) {
+        this.cityInfo = cityInfo;
     }
 
     public String getStreet() {
@@ -45,8 +45,8 @@ public class AddressDTO {
         this.additionalInfo = additionalInfo;
     }
 
-    public CityInfoDTO getCityInfoDTO() {
-        return cityInfoDTO;
+    public CityInfoDTO getCityInfo() {
+        return cityInfo;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AddressDTO {
         return "AddressDTO{" +
             ", street='" + street + '\'' +
             ", additionalInfo='" + additionalInfo + '\'' +
-            ", cityInfoDTO=" + cityInfoDTO +
+            ", cityInfoDTO=" + cityInfo +
             '}';
     }
 
@@ -69,11 +69,11 @@ public class AddressDTO {
         AddressDTO that = (AddressDTO) o;
         return Objects.equals(getStreet(), that.getStreet()) && Objects
             .equals(getAdditionalInfo(), that.getAdditionalInfo()) && Objects
-            .equals(getCityInfoDTO(), that.getCityInfoDTO());
+            .equals(getCityInfo(), that.getCityInfo());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStreet(), getAdditionalInfo(), getCityInfoDTO());
+        return Objects.hash(getStreet(), getAdditionalInfo(), getCityInfo());
     }
 }

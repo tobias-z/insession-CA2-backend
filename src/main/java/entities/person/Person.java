@@ -56,6 +56,9 @@ public class Person implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "hobby_name")
     )
     private List<Hobby> hobbies;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Address address;
     
 
     public Person(String email, String firstName, String lastName) {
@@ -80,6 +83,14 @@ public class Person implements Serializable {
         if (hobby != null) {
             this.hobbies.add(hobby);
             hobby.getPersons().add(this);
+        }
+    }
+
+    // Before this is called, we need to persist the cityinfo used in the address
+    public void setAddress(Address address) {
+        if (address != null) {
+            this.address = address;
+            address.getPeople().add(this);
         }
     }
 
@@ -121,6 +132,10 @@ public class Person implements Serializable {
     
      public List<Hobby> getHobbies() {
         return hobbies;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
 }
