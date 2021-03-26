@@ -51,19 +51,5 @@ public class CityInfoFacade implements CityInfoRepository {
         }
 
     }
-    
-    /*
-    public CityInfoDTO getByZip(String zipCode) throws WebApplicationException {
-         EntityManager em = emf.createEntityManager();
-        try {
-            CityInfo cityInfo = em.find(CityInfo.class, zipCode);
-            if (cityInfo == null) {
-                throw new WebApplicationException(String.format("City with zip: (%S) not found", zipCode), 404);
-            }
-            return new CityInfoDTO(cityInfo);
-        } finally {
-            em.close();
-        }
-    }
-*/
+
 }

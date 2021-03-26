@@ -49,7 +49,6 @@ import utils.ScriptUtils;
 /**
  * @author peter
  */
-@Disabled
 public class PersonResourceTest {
 
 
@@ -116,7 +115,7 @@ public class PersonResourceTest {
         cityInfo2 = new CityInfo("2800", "Kongens Lyngby");
 
         // These are not put on the person
-        hobby3 = new Hobby("Hobby3", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
+        hobby3 = new Hobby("anotherhobby", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
         cityInfo3 = new CityInfo("0899", "Kommuneservice");
 
         try {
@@ -174,7 +173,7 @@ public class PersonResourceTest {
         Person person = new Person("Egon", "Keld", "Benny");
         Phone phone = new Phone("654321", "this is an awesome number");
         person.addPhone(phone);
-        Hobby hobby = new Hobby("Hobby3", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
+        Hobby hobby = new Hobby("anotherhobby", "https://en.wikipedia.org/wiki/hobby2", "Generel", "Konkurrence");
         person.addHobby(hobby);
         Address address = new Address("insanestreet", "this is a street");
         address.setCityInfo(new CityInfo("0899", "Kommuneservice"));
