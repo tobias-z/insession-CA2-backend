@@ -25,8 +25,7 @@ public class PersonResource extends Provider {
   
 
     @Override
-    @GET
-    public Response getAll() {
+     public Response getAll() {
         PersonsDTO persons = REPO.getAll();
         return Response.ok(GSON.toJson(persons)).build();
     }
@@ -39,20 +38,16 @@ public class PersonResource extends Provider {
         return Response.ok(okayResponse).build();
     }
     
-    @POST
     @Override
     public Response create(String person) {
         PersonDTO p = GSON.fromJson(person, PersonDTO.class);
         PersonDTO newPerson = REPO.create(p);
         return Response.ok(GSON.toJson(newPerson)).build();
     }
-    
-    
 
-    @PUT
-    @Path("{id}")
+    
     @Override
-    public Response update(@PathParam("id") int id, String person) {
+    public Response update(int id, String person) {
         PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
         pDTO.setId(id);
         PersonDTO pEdited = REPO.editPerson(pDTO);
@@ -60,20 +55,43 @@ public class PersonResource extends Provider {
     }
     
    
-    
     @Override
     public Response delete(int id) {
         //TODO (tz): implement this!
         throw new UnsupportedOperationException("Not yet implemented!");
     }
-
-   
-    @Path("{id}")
-    @GET
+    
+    
     @Override
-    public Response getById(@PathParam("id") int id ) {
+    public Response getById(int id ) {
         PersonDTO p = REPO.getById(id);
         return Response.ok(GSON.toJson(p)).build();
     }
+    
+   
+    @Path("/number/{number}")
+    @GET
+    public Response getByNumber(@PathParam("number") String number ) {
+        PersonFacade personFacade = PersonFacade.getPersonFacade(EMF);
+        PersonDTO p =  personFacade.getByNumber(number);
+        return Response.ok(GSON.toJson(p)).build();
+    }
+    
+    @Path("/city/{zipCode}")
+    @GET
+    public Response getByZip(@PathParam("zipCode") String zipCode ) {
+        PersonFacade personFacade = PersonFacade.getPersonFacade(EMF);
+        PersonsDTO p =  personFacade.getByZip(zipCode);
+        return Response.ok(GSON.toJson(p)).build();
+    }
+    
+    @Path("/hobby/{name}")
+    @GET
+    public Response getByHobby(@PathParam("name") String name ) {
+        PersonFacade personFacade = PersonFacade.getPersonFacade(EMF);
+        PersonsDTO p =  personFacade.getByZip(name);
+        return Response.ok(GSON.toJson(p)).build();
+    }
+    
     
 }

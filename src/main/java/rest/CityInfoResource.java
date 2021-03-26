@@ -1,10 +1,13 @@
 package rest;
 
+import dtos.PersonDTO;
+import dtos.cityinfo.CityInfoDTO;
 import dtos.cityinfo.CityInfosDTO;
 import entities.cityinfo.CityInfoRepository;
 import facades.CityInfoFacade;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import rest.provider.Provider;
 
@@ -50,4 +53,14 @@ public class CityInfoResource extends Provider {
         //TODO (tz): implement this!
         throw new UnsupportedOperationException("Not yet implemented!");
     }
+    
+    /*
+    @GET
+    @Path("{zipCode}")
+    public Response getByZip(@PathParam("zipCode") String zipCode ) {
+        CityInfoFacade cityInfoFacade = new CityInfoFacade();
+        CityInfoDTO c = cityInfoFacade.getByZip(zipCode);
+        return Response.ok(GSON.toJson(c)).build();
+    }
+*/
 }
