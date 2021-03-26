@@ -8,6 +8,7 @@ package facades;
 import dtos.PersonDTO;
 import dtos.PersonsDTO;
 import dtos.PhoneDTO;
+import dtos.cityinfo.CityInfoDTO;
 import dtos.hobby.HobbyDTO;
 import entities.Address;
 import entities.Phone;
@@ -15,13 +16,16 @@ import entities.cityinfo.CityInfo;
 import entities.hobby.Hobby;
 import entities.person.Person;
 import entities.person.PersonRepository;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NamedQuery;
 
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
 import utils.ScriptUtils;
-
 
 /**
  * @author peter
@@ -71,8 +75,8 @@ public class PersonFacade implements PersonRepository {
         for (HobbyDTO hobbyDTO : personDTO.getHobbies()) {
             try {
                 Hobby hobby = em.createQuery("SELECT h FROM Hobby h WHERE h.name = :hobby", Hobby.class)
-                    .setParameter("hobby", hobbyDTO.getName())
-                    .getSingleResult();
+                        .setParameter("hobby", hobbyDTO.getName())
+                        .getSingleResult();
                 person.addHobby(hobby);
             } catch (NoResultException err) {
                 throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist", 400);
@@ -84,12 +88,12 @@ public class PersonFacade implements PersonRepository {
 
             try {
                 Phone phoneAlreadyInUse = em
-                    .createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class)
-                    .setParameter("number", phoneDTO.getNumber())
-                    .getSingleResult();
+                        .createQuery("SELECT p FROM Phone p WHERE p.number = :number", Phone.class)
+                        .setParameter("number", phoneDTO.getNumber())
+                        .getSingleResult();
 
                 throw new WebApplicationException(
-                    "Phone with number: " + phoneAlreadyInUse.getNumber() + ", is already beeing used", 400);
+                        "Phone with number: " + phoneAlreadyInUse.getNumber() + ", is already beeing used", 400);
             } catch (NoResultException e) {
                 Phone phoneToAdd = new Phone(phoneDTO.getNumber(), phoneDTO.getDescription());
                 person.addPhone(phoneToAdd);
@@ -99,11 +103,11 @@ public class PersonFacade implements PersonRepository {
 
         // Create address
         Address address = new Address(personDTO.getAddress().getStreet(),
-            personDTO.getAddress().getAdditionalInfo());
+                personDTO.getAddress().getAdditionalInfo());
         CityInfo cityInfo = em.find(CityInfo.class, personDTO.getAddress().getCityInfo().getZipCode());
         if (cityInfo == null) {
             throw new WebApplicationException(
-                "No such zipCode exists: " + personDTO.getAddress().getCityInfo().getZipCode(), 400);
+                    "No such zipCode exists: " + personDTO.getAddress().getCityInfo().getZipCode(), 400);
         }
         address.setCityInfo(cityInfo);
         person.setAddress(address);
@@ -127,7 +131,7 @@ public class PersonFacade implements PersonRepository {
 
         if (editPerson == null) {
             throw new WebApplicationException(String.format("Person with id: (%d) not found", p.getId()),
-                400);
+                    400);
         }
 
         editPerson.setEmail(p.getEmail());
@@ -147,26 +151,19 @@ public class PersonFacade implements PersonRepository {
             }
         }
 
-        // Edit hobbies
+        editPerson.getHobbies().clear();
         for (int i = 0; i < p.getHobbies().size(); i++) {
             HobbyDTO hobbyDTO = p.getHobbies().get(i);
+
             try {
-                Hobby hobby = editPerson.getHobbies().get(i);
-                hobby.setName(hobbyDTO.getName());
-                hobby.setCategory(hobbyDTO.getCategory());
-                hobby.setType(hobbyDTO.getType());
-                hobby.setWikiLink(hobbyDTO.getWikiLink());
-            } catch (IndexOutOfBoundsException e) {
-                try {
-                    Hobby foundHobby = em
+                Hobby foundHobby = em
                         .createQuery("SELECT h FROM Hobby h WHERE h.name = :hobby", Hobby.class)
                         .setParameter("hobby", hobbyDTO.getName())
                         .getSingleResult();
-                    editPerson.addHobby(foundHobby);
-                } catch (NoResultException error) {
-                    throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist",
+                editPerson.addHobby(foundHobby);
+            } catch (NoResultException error) {
+                throw new WebApplicationException("Hobby: " + hobbyDTO.getName() + ", does not exist",
                         400);
-                }
             }
         }
 
@@ -181,7 +178,7 @@ public class PersonFacade implements PersonRepository {
             CityInfo cityInfo = em.find(CityInfo.class, p.getAddress().getCityInfo().getZipCode());
             if (cityInfo == null) {
                 throw new WebApplicationException(
-                    "Zipcode: " + p.getAddress().getCityInfo().getZipCode() + ", does not exist", 404);
+                        "Zipcode: " + p.getAddress().getCityInfo().getZipCode() + ", does not exist", 404);
             }
             newAddress.setCityInfo(cityInfo);
             editPerson.setAddress(newAddress);
@@ -227,7 +224,50 @@ public class PersonFacade implements PersonRepository {
 
     }
 
+    public PersonDTO getByNumber(String number) throws WebApplicationException {
+        EntityManager em = getEntityManager();
+
+        try {
+            Person person = em
+                    .createQuery("SELECT p FROM Person p JOIN p.phones phone WHERE phone.number = :number", Person.class)
+                    .setParameter("number", number)
+                    .getSingleResult();
+            return new PersonDTO(person);
+        } catch (NoResultException e) {
+            throw new WebApplicationException("No number" + number, 404);
+        }
+    }
+
+    public PersonsDTO getByZip(String zipCode) throws WebApplicationException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            List<Person> persons = em
+                    .createQuery("SELECT p FROM Person p JOIN p.address a JOIN a.cityInfo c WHERE c.zipCode = :zipCode", Person.class)
+                    .setParameter("zipCode", zipCode)
+                    .getResultList();
+            if (persons.isEmpty()) {
+                throw new WebApplicationException(String.format("City with zip: (%S) not found", zipCode), 404);
+            }
+            return new PersonsDTO(persons);
+        } finally {
+            em.close();
+        }
+    }
+
+    public PersonsDTO getByHobby(String hobby) throws WebApplicationException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            List<Person> persons = em
+                    .createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobby", Person.class)
+                    .setParameter("hobby", hobby)
+                    .getResultList();
+            if (persons.isEmpty()) {
+                throw new WebApplicationException(String.format("No persons with such hobby: (%S) found", hobby), 404);
+            }
+            return new PersonsDTO(persons);
+        } finally {
+            em.close();
+        }
+    }
 
 }
-
-

@@ -1,5 +1,6 @@
 package facades;
 
+import dtos.cityinfo.CityInfoDTO;
 import dtos.cityinfo.CityInfosDTO;
 import entities.cityinfo.CityInfo;
 import entities.cityinfo.CityInfoRepository;
@@ -14,7 +15,7 @@ public class CityInfoFacade implements CityInfoRepository {
     private static CityInfoFacade instance;
     private static EntityManagerFactory emf;
 
-    private CityInfoFacade() {
+    public CityInfoFacade() {
     }
 
     public static CityInfoFacade getInstance(EntityManagerFactory _emf) {
@@ -50,4 +51,19 @@ public class CityInfoFacade implements CityInfoRepository {
         }
 
     }
+    
+    /*
+    public CityInfoDTO getByZip(String zipCode) throws WebApplicationException {
+         EntityManager em = emf.createEntityManager();
+        try {
+            CityInfo cityInfo = em.find(CityInfo.class, zipCode);
+            if (cityInfo == null) {
+                throw new WebApplicationException(String.format("City with zip: (%S) not found", zipCode), 404);
+            }
+            return new CityInfoDTO(cityInfo);
+        } finally {
+            em.close();
+        }
+    }
+*/
 }
