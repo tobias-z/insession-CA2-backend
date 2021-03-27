@@ -1,28 +1,191 @@
-# InSession startcode
+# InSession CA2 server
+### [🏠Github repository](https://github.com/tobias-z/insession-CA2-backend)
 
-## Team
-**Peter R Andersen**
-* [Github](https://github.com/Peter-Rambeck)
+## Authors
 
-**Jens Gelbek**
+👤 **Peter R Andersen**
+
+- [Github](https://github.com/Peter-Rambeck)
+
+👤 **Tobias Zimmermann**
+
+- [Github](https://github.com/tobias-z)
+
+👤**Jens Gelbek**
 * [Github](https://github.com/jensgelbek)
 
-**Rasmus Ditlev Hansen**
+👤**Rasmus Ditlev Hansen**
 * [Github](https://github.com/RasmusDH)
 
-**Tobias Zimmermann**
-* [Github](https://github.com/tobias-z)
+# API documentation
 
-## Getting started
-1. Change the `remote.server` to your domain in the pom.xml
-2. Change env variable `connection_str` in the EMF_Creator
-3. Insert that new env variable on your droplets docker-compose.yml file together with a new database name
-4. Run these commands:
-    - docker-compose down
-    - docker-compose build
-    - docker-compose up -d
-    
-5. Create the new database on your droplet
+## Base URL : https://api.tobias-z.com/insession-CA2/api
 
-### Travis
-In the .travis.yml there is a section `only` under branches, this is where you can decide which branches should be build on push.
+| Method | URL | Request Body (JSON) | Response (JSON) | Error (e) |
+| :--- | :--- | :--- | :--- | :--- |
+| GET | /persons/phone/{number} |  | Single person | YES |
+| GET | /persons/hobby/{hobbyName} | | Many people | YES |
+| GET | /persons/city/{zipCode} | | Many people | YES |
+| GET | /persons | | Many people | YES |
+| GET | /persons/{id} | | Single person | YES |
+| PUT | /persons/{id} | Person request | Single person | YES |
+| POST | /persons | Person request | Single person | YES |
+| GET | /cities | | Cities | YES |
+| GET | /hobbies | | Hobbies | YES |
+
+Method URL Request Body (JSON) Response (JSON) Error (e) GET
+/persons/phone/{number}
+
+---
+
+## Request Body for POST and PUT
+
+**Person**
+
+```json
+{
+  "email": String,
+  "firstName": String,
+  "lastName": String,
+  "phones": [
+    {
+      "number": String,
+      "description": String
+    }
+  ],
+  "hobby": [
+    {
+      "name": String,
+      "description": String
+    }
+  ],
+  "address": {
+    "street": String,
+    "additionalInfo": String,
+    "cityInfo": {
+      "zipCode": String,
+      "city": String
+    }
+  }
+}
+```
+
+---
+
+## Responses
+
+**A single person**
+
+```json
+{
+  "id": Number,
+  "email": String,
+  "firstName": String,
+  "lastName": String,
+  "phones": [
+    {
+      "id": Number,
+      "number": String,
+      "description": String
+    }
+  ],
+  "hobby": [
+    {
+      "id": Number,
+      "name": String,
+      "description": String
+    }
+  ],
+  "address": {
+    "street": String,
+    "additionalInfo": String,
+    "cityInfo": {
+      "zipCode": String,
+      "city": String
+    }
+  }
+}
+```
+
+**Many people**
+
+```json
+{
+  "all": [
+    {
+      "id": Number,
+      "email": String,
+      "firstName": String,
+      "lastName": String,
+      "phones": [
+        {
+          "id": Number,
+          "number": String,
+          "description": String
+        }
+      ],
+      "hobby": [
+        {
+          "id": Number,
+          "name": String,
+          "description": String
+        }
+      ],
+      "address": {
+        "street": String,
+        "additionalInfo": String,
+        "cityInfo": {
+          "zipCode": String,
+          "city": String
+        }
+      }
+    }
+  ]
+}
+```
+
+**Cities**
+
+```json
+{
+  "all": [
+    {
+      "zipCode": String,
+      "city": String
+    }
+  ]
+}
+```
+
+**Scripts**
+
+```json
+{
+  "worked": String
+}
+```
+
+**Hobbies**
+
+```json
+{
+  "all": [
+    {
+      "id": Number,
+      "name": String,
+      "wikiLink": String,
+      "type": String
+    }
+  ]
+}
+```
+
+**Errors**
+
+```json
+{
+    "code": String,
+    "message": String
+}
+```
+
