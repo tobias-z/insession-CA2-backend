@@ -1,4 +1,5 @@
 # InSession CA2 server
+[![Build Status](https://travis-ci.com/tobias-z/insession-CA2-backend.svg?branch=master)]
 ### [🏠Github repository](https://github.com/tobias-z/insession-CA2-backend)
 
 ## Authors
