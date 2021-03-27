@@ -42,7 +42,7 @@ Method URL Request Body (JSON) Response (JSON) Error (e) GET
 
 **Person**
 
-```json
+```javascript
 {
   "email": String,
   "firstName": String,
@@ -76,7 +76,7 @@ Method URL Request Body (JSON) Response (JSON) Error (e) GET
 
 **A single person**
 
-```json
+```javascript
 {
   "id": Number,
   "email": String,
@@ -109,7 +109,7 @@ Method URL Request Body (JSON) Response (JSON) Error (e) GET
 
 **Many people**
 
-```json
+```javascript
 {
   "all": [
     {
@@ -146,7 +146,7 @@ Method URL Request Body (JSON) Response (JSON) Error (e) GET
 
 **Cities**
 
-```json
+```javascript
 {
   "all": [
     {
@@ -159,7 +159,7 @@ Method URL Request Body (JSON) Response (JSON) Error (e) GET
 
 **Scripts**
 
-```json
+```javascript
 {
   "worked": String
 }
@@ -167,7 +167,7 @@ Method URL Request Body (JSON) Response (JSON) Error (e) GET
 
 **Hobbies**
 
-```json
+```javascript
 {
   "all": [
     {
@@ -182,7 +182,7 @@ Method URL Request Body (JSON) Response (JSON) Error (e) GET
 
 **Errors**
 
-```json
+```javascript
 {
     "code": String,
     "message": String
